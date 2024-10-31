@@ -6,6 +6,7 @@ import {
   View,
   Modal,
   TextInput,
+  Button,
   TouchableOpacity,
 } from "react-native";
 
@@ -19,42 +20,23 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore/lite";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; 
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); 
 
-export function HomeScreen({ navigation }) {
+export function HomeScreen() {
   const [postsList, setPostsList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const db = getFirestore(app);
 
-  // Verifica si el usuario está autenticado
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsAuthenticated(true);
-        fetchPosts();
-      } else {
-        setIsAuthenticated(false);
-        navigation.navigate("Login");
-      }
-    });
-    return unsubscribe;
-  }, [navigation]);
-
   const fetchPosts = async () => {
-    if (isAuthenticated) {
-      const querySnapshot = await getDocs(collection(db, "posts"));
-      const posts = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setPostsList(posts);
-    }
+    const querySnapshot = await getDocs(collection(db, "posts"));
+    const posts = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setPostsList(posts);
   };
 
   const addPost = async () => {
@@ -66,24 +48,24 @@ export function HomeScreen({ navigation }) {
       setNewPostTitle("");
       setNewPostContent("");
       setModalVisible(false);
-      fetchPosts(); 
+      fetchPosts(); // Refresh posts after adding a new one
     }
   };
 
   const deletePost = async (postId) => {
     await deleteDoc(doc(db, "posts", postId));
-    fetchPosts(); 
+    fetchPosts(); // Refresh posts after deletion
   };
 
-  if (!isAuthenticated) {
-    return null; 
-  }
+  useEffect(() => {
+    fetchPosts();
+  }, []);
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.postsContainer}>
         {postsList.length === 0 ? (
-          <Text>Loading...</Text>
+          <Text></Text>
         ) : (
           postsList.map((post) => (
             <View key={post.id} style={styles.postCard}>
@@ -100,6 +82,7 @@ export function HomeScreen({ navigation }) {
         )}
       </ScrollView>
 
+      {/* Button to open modal */}
       <TouchableOpacity
         style={[styles.addButton]}
         onPress={() => setModalVisible(true)}
