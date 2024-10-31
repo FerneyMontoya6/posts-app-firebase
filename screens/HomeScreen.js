@@ -6,55 +6,29 @@ import {
   View,
   Modal,
   TextInput,
-  Button,
   TouchableOpacity,
 } from "react-native";
 
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../firebase-config";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  addDoc,
-  deleteDoc,
-  doc,
-} from "firebase/firestore/lite";
-
-const app = initializeApp(firebaseConfig);
+/* Importaciones de Firebase */
 
 export function HomeScreen() {
   const [postsList, setPostsList] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [newPostTitle, setNewPostTitle] = useState("");
   const [newPostContent, setNewPostContent] = useState("");
-  const db = getFirestore(app);
+
+  /* inicialización bd */
 
   const fetchPosts = async () => {
-    const querySnapshot = await getDocs(collection(db, "posts"));
-    const posts = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setPostsList(posts);
+    /* Code */
   };
 
   const addPost = async () => {
-    if (newPostTitle && newPostContent) {
-      await addDoc(collection(db, "posts"), {
-        title: newPostTitle,
-        content: newPostContent,
-      });
-      setNewPostTitle("");
-      setNewPostContent("");
-      setModalVisible(false);
-      fetchPosts(); // Refresh posts after adding a new one
-    }
+    /* Code */
   };
 
   const deletePost = async (postId) => {
-    await deleteDoc(doc(db, "posts", postId));
-    fetchPosts(); // Refresh posts after deletion
+    /* Code */
   };
 
   useEffect(() => {
@@ -82,7 +56,6 @@ export function HomeScreen() {
         )}
       </ScrollView>
 
-      {/* Button to open modal */}
       <TouchableOpacity
         style={[styles.addButton]}
         onPress={() => setModalVisible(true)}

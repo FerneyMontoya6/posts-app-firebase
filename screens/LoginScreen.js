@@ -9,21 +9,9 @@ import {
   TextInput,
 } from "react-native";
 import { BlurView } from "expo-blur";
-
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-} from "firebase/auth";
-import { initializeApp } from "firebase/app";
-import { firebaseConfig } from "../firebase-config";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 
-
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+/* Importaciones de Firebase */
 
 export function LoginScreen() {
   const [email, setEmail] = useState("");
@@ -35,45 +23,15 @@ export function LoginScreen() {
     "https://i.pinimg.com/474x/31/ec/2c/31ec2ce212492e600b8de27f38846ed7.jpg";
 
   const handleCreateAccount = () => {
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("Account created!");
-        const user = userCredential.user;
-        console.log(user);
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.message);
-      });
+    /* Code */
   };
 
   const handleCreateGoogle = () => {
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        console.log("Signed in with Google!");
-        const user = result.user;
-        console.log(user);
-        navigation.navigate("Home");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.message);
-      });
+    /* Code */
   };
 
   const handleSignIn = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
-        console.log("Signed in!");
-        const user = userCredential.user;
-        console.log(user);
-        navigation.navigate("Home");
-      })
-      .catch((error) => {
-        console.log(error);
-        alert(error.message);
-      });
+    /* Code */
   };
 
   return (
