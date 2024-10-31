@@ -19,6 +19,7 @@ import {
 } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { firebaseConfig } from "./firebase-config";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -49,6 +50,21 @@ function LoginScreen() {
         console.log("Account created!");
         const user = userCredential.user;
         console.log(user);
+      })
+      .catch((error) => {
+        console.log(error);
+        alert(error.message);
+      });
+  };
+
+  const handleCreateGoogle = () => {
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        console.log("Signed in with Google!");
+        const user = result.user;
+        console.log(user);
+        navigation.navigate("Home");
       })
       .catch((error) => {
         console.log(error);
@@ -154,6 +170,18 @@ function LoginScreen() {
                 Create Account
               </Text>
             </TouchableOpacity>
+            <Text style={{ fontSize: 17, fontWeight: "400", color: "white", margin: 8 }}>
+              or
+            </Text>
+
+            <TouchableOpacity
+              onPress={handleCreateGoogle}
+              style={[styles.button, { backgroundColor: "#6792F090" }]}
+            >
+              <Text style={{ fontSize: 17, fontWeight: "400", color: "white" }}>
+                Sing in with Google
+              </Text>
+            </TouchableOpacity>
           </View>
         </BlurView>
       </ScrollView>
@@ -188,7 +216,6 @@ const styles = StyleSheet.create({
   },
   login: {
     width: 350,
-    height: 500,
     borderColor: "#fff",
     borderWidth: 2,
     borderRadius: 10,
